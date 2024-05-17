@@ -35,6 +35,10 @@ A completion engine for nvim.coc using the codellama LLM.
 "coc-codellama.middle": "<|fim_middle|>",
 ```
 
+## Demo
+
+[![asciicast](https://asciinema.org/a/muhLVNW5iFNfmXLWO01goXPiA.svg)](https://asciinema.org/a/muhLVNW5iFNfmXLWO01goXPiA)
+
 ## License
 
 MIT
