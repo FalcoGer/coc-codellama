@@ -1,6 +1,6 @@
 {
   "name": "coc-codellama",
-  "version": "0.0.0-development",
+  "version": "0.0.1",
   "description": "coc completion using ollama's codellama model",
   "author": "FalcoGer <16250196+FalcoGer@users.noreply.github.com>",
   "license": "MIT",
