@@ -33,6 +33,41 @@
           "type": "boolean",
           "default": true,
           "description": "Enable coc-codellama extension"
+        },
+        "coc-codellama.host": {
+          "type": "string",
+          "default": "localhost",
+          "description": "The host to connect to."
+        },
+        "coc-codellama.port": {
+          "type": "number",
+          "default": 11434,
+          "description": "The remote port to connect to."
+        },
+        "coc-codellama.contextAbove": {
+          "type": "number",
+          "default": 7,
+          "description": "How many lines above the current line to include in the context for completion."
+        },
+        "coc-codellama.contextBelow": {
+          "type": "number",
+          "default": 7,
+          "description": "How many lines below the current line to include in the context for completion."
+        },
+        "coc-codellama.shortcut": {
+          "type": "string",
+          "default": "CL",
+          "description": "The shortcut to use for this completion source."
+        },
+        "coc-codellama.priority": {
+          "type": "number",
+          "default": 995,
+          "description": "How far up in the list to put completions from this source."
+        },
+        "coc-codellama.model": {
+          "type": "string",
+          "default": "codellama:code",
+          "description": "The large language model to use for completions."
         }
       }
     },

@@ -47,7 +47,7 @@ class CodeLlamaCompletionProvider implements CompletionItemProvider {
         return items;
     }
 
-    makeRequest(prompt: string, name: string): Promise<CompletionItem> {
+    async makeRequest(prompt: string): Promise<CompletionItem> {
         return new Promise((resolve, reject) => {
             // https://github.com/ollama/ollama/blob/main/docs/api.md
             const postData = {
@@ -58,7 +58,7 @@ class CodeLlamaCompletionProvider implements CompletionItemProvider {
                 options: {
                     // temperature: 0.0,
                     // seed: 0,
-                    num_predict: 16
+                    num_predict: 24
                 }
             };
 
@@ -99,9 +99,10 @@ class CodeLlamaCompletionProvider implements CompletionItemProvider {
                         if (response === "") {
                             reject("Response was empty.");
                         } else {
-                            resolve(new CompletionItemImpl(name, response, details));
+                            let label: string = response.trim();
+                            label = label.length < 20 ? label : label.substring(0, 20);
+                            resolve(new CompletionItemImpl(label, response, details));
                         }
-
                     } catch (error: any) {
                         reject(error);
                     }
@@ -138,7 +139,7 @@ class CodeLlamaCompletionProvider implements CompletionItemProvider {
         let items: CompletionItem[] = [];
 
         try {
-            const result = await this.makeRequest(infillPrompt, "llama");
+            const result = await this.makeRequest(infillPrompt);
             if (result !== null) {
                 items.push(result);
             }
@@ -151,7 +152,7 @@ class CodeLlamaCompletionProvider implements CompletionItemProvider {
 }
 
 export async function activate(context: ExtensionContext): Promise<void> {
-    window.showInformationMessage('coc-codellama loaded!');
+    // window.showInformationMessage('coc-codellama loaded!');
 
     let {subscriptions} = context
     const {nvim} = workspace
@@ -163,11 +164,16 @@ export async function activate(context: ExtensionContext): Promise<void> {
     // channel.appendLine("coc-codellama is loaded.")
 
     // load configuration
+    let enabled = configuration.get<boolean>("enabled", true);
+    if (!enabled)
+    {
+        return;
+    }
     let host = configuration.get<string>("host", "localhost");
     let port = configuration.get<uinteger>("port", 11434);
     let contextAbove = configuration.get<uinteger>("contextAbove", 7);
     let contextBelow = configuration.get<uinteger>("contextBelow", 7);
-    let model = configuration.get<string>("model", "codellama:7b-code");
+    let model = configuration.get<string>("model", "codellama:code");
     let shortcut = configuration.get<string>("shortcut", "CL");
     let priority = configuration.get<integer>("priority", 995);
 
