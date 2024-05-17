@@ -24,6 +24,17 @@ A completion engine for nvim.coc using the codellama LLM.
 | coc-codellama.token-limit  | number  | 24             | The maximum number of tokens allowed.                                           |
 | coc-codellama.temperature  | number  | 0.8            | How variable the output should be. Must be between 0 and 2. 0 means totally deterministic. |
 
+## Using codegemma:code
+
+`:CocConfig`
+
+```json
+"coc-codellama.model": "codegemma:code",
+"coc-codellama.prefix": "<|fim_prefix|>",
+"coc-codellama.suffix": "<|fim_suffix|>",
+"coc-codellama.middle": "<|fim_middle|>",
+```
+
 ## License
 
 MIT
