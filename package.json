@@ -1,6 +1,6 @@
 {
   "name": "coc-codellama",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "coc completion using ollama's codellama model",
   "author": "FalcoGer <16250196+FalcoGer@users.noreply.github.com>",
   "license": "MIT",
@@ -68,6 +68,31 @@
           "type": "string",
           "default": "codellama:code",
           "description": "The large language model to use for completions."
+        },
+        "coc-codellama.prefix": {
+          "type": "string",
+          "default": "<PRE>",
+          "description": "The token to put in front of the fill in the middle prefix."
+        },
+        "coc-codellama.suffix": {
+          "type": "string",
+          "default": " <SUF> ",
+          "description": "The token to put in front of the fill in the middle suffix."
+        },
+        "coc-codellama.middle": {
+          "type": "string",
+          "default": " <MID>",
+          "description": "The token to put at the end of the fill in the middle prompt."
+        },
+        "coc-codellama.token-limit": {
+          "type": "number",
+          "default": 24,
+          "description": "The maximum number of tokens allowed."
+        },
+        "coc-codellama.temperature": {
+          "type": "number",
+          "default": 0.8,
+          "description": "How variable the output should be. Must be between 0 and 2. 0 means totally deterministic."
         }
       }
     },

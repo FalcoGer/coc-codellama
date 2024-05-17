@@ -27,14 +27,24 @@ class CodeLlamaCompletionProvider implements CompletionItemProvider {
     model: string;
     contextAbove: uinteger;
     contextBelow: uinteger;
+    prefix: string;
+    suffix: string;
+    middle: string;
+    tokenLimit: uinteger;
+    temperature: number;
 
-    constructor(host: string, port:uinteger, model: string, contextAbove: uinteger, contextBelow: uinteger)
+    constructor(host: string, port:uinteger, model: string, contextAbove: uinteger, contextBelow: uinteger, prefix: string, suffix: string, middle: string, tokenLimit: uinteger, temperature: number)
     {
         this.host = host;
         this.port = port;
         this.model = model;
         this.contextAbove = contextAbove;
         this.contextBelow = contextBelow;
+        this.prefix = prefix;
+        this.suffix = suffix;
+        this.middle = middle;
+        this.tokenLimit = tokenLimit;
+        this.temperature = temperature;
     }
 
     async provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken, context: CompletionContext): Promise<CompletionItem[] | CompletionList | null | undefined> {
@@ -56,9 +66,9 @@ class CodeLlamaCompletionProvider implements CompletionItemProvider {
                 stream: false,
                 keep_alive: "5m",
                 options: {
-                    // temperature: 0.0,
+                    temperature: this.temperature,
+                    num_predict: this.tokenLimit
                     // seed: 0,
-                    num_predict: 24
                 }
             };
 
@@ -134,7 +144,7 @@ class CodeLlamaCompletionProvider implements CompletionItemProvider {
 
         const prefix: Range = {start: {character: 0, line: firstLine}, end: position};
         const suffix: Range = {start: position, end: {character: 0, line: lastLine}}
-        const infillPrompt: string = "<PRE>" + document.getText(prefix) + " <SUF> " + document.getText(suffix) + " <MID>";
+        const infillPrompt: string = this.prefix + document.getText(prefix) + this.suffix + document.getText(suffix) + this.middle;
 
         let items: CompletionItem[] = [];
 
@@ -176,6 +186,11 @@ export async function activate(context: ExtensionContext): Promise<void> {
     let model = configuration.get<string>("model", "codellama:code");
     let shortcut = configuration.get<string>("shortcut", "CL");
     let priority = configuration.get<integer>("priority", 995);
+    let prefix = configuration.get<string>("prefix", "<PRE>");
+    let suffix = configuration.get<string>("suffix", " <SUF> ");
+    let middle = configuration.get<string>("middle", " <MID>");
+    let tokenLimit = configuration.get<uinteger>("token-limit", 24);
+    let temperature = configuration.get<number>("temperarture", 0.8);
 
     // register commands
     let promptCmd = commands.registerCommand("codellama.Prompt", async (...args) => {
@@ -201,7 +216,7 @@ export async function activate(context: ExtensionContext): Promise<void> {
     // subscriptions.push(listManager.registerList(new DemoList));
 
     // register sources
-    let source: CompletionItemProvider = new CodeLlamaCompletionProvider(host, port, model, contextAbove, contextBelow);
+    let source: CompletionItemProvider = new CodeLlamaCompletionProvider(host, port, model, contextAbove, contextBelow, prefix, suffix, middle, tokenLimit, temperature);
     let provider = languages.registerCompletionItemProvider("codellama", shortcut, null, source, [], priority);
     subscriptions.push(provider);
 
